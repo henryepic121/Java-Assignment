@@ -19,10 +19,10 @@ public class Square implements ActionListener {
 
     private static JButton click1square;
 
-    private int click1xPosition;
-    private int click1yPosition;
+    private static int click1xPosition;
+    private static int click1yPosition;
 
-    public Square(final String image, final int Width, final int Length, final int x, final int y) {
+    public Square(String image, int Width, int Length, int x, int y) {
 
         xPosition = x;
         yPosition = y;
@@ -48,20 +48,23 @@ public class Square implements ActionListener {
     }
 
     public void actionPerformed(final ActionEvent event) {
-        // System.out.print("You clicked a square at" + xPosition + yPosition);
+        
+        System.out.print("You clicked a square at" + xPosition + yPosition);
         // System.out.print("The image on that square is" + SquareIcon);
 
         System.out.print("\n\n\n\n\n\n");
 
+        int middleX = 0;
+        int middleY = 0;
+
 
         clickcount = clickcount + 1;
 
-        click1xPosition = xPosition;
-        click1yPosition = yPosition;
-
         if (clickcount == 1) {
+
             click1square = square;
-            
+            click1xPosition = xPosition;
+            click1yPosition = yPosition;
 
         }
 
@@ -87,50 +90,51 @@ public class Square implements ActionListener {
             click1peice = "RedFrog.png";
 
         }
-            
-        
-            //////////////////////////////////////////////////////////////////////////////////////////////make neater
-        // //deselect
-        if (SquareIcon == ("GreenFrog.png") & (clickcount == 2) & (click1peice != ("RedFrog.png"))) {
+
+        //// deselect
+
+        //// new
+
+        if ((SquareIcon == ("GreenFrog.png") & (click1peice == ("GreenFrog.png")) & (clickcount == 2))) {
 
             final ImageIcon Image = new ImageIcon("GreenFrog.png");
             click1square.setIcon(Image);
+
             clickcount = 0;
 
         }
-        if ((SquareIcon == "RedFrog.png") & (clickcount == 2) & (click1peice != ("GreenFrog.png"))) {
+
+        if ((SquareIcon == ("RedFrog.png") & (click1peice == ("RedFrog.png")) & (clickcount == 2))) {
 
             final ImageIcon Image = new ImageIcon("RedFrog.png");
             click1square.setIcon(Image);
-            clickcount = 0;
 
+            clickcount = 0;
         }
-        //
-        // red frog green frog 
-        if ((SquareIcon == ("RedFrog.png") | (SquareIcon == ("Water.png"))) & ((click1peice == ("GreenFrog.png")) & (clickcount == 2))) {
-            
+
+        ////
+
+        if ((SquareIcon == ("RedFrog.png") | (SquareIcon == ("Water.png")))& ((click1peice == ("GreenFrog.png")) & (clickcount == 2))) {
+
             final ImageIcon Image = new ImageIcon("GreenFrog.png");
             click1square.setIcon(Image);
-            
-            //SquareIcon= "GreenFrog.png"; 
-            
+
             clickcount = 0;
 
         }
 
-        if ((SquareIcon == ("GreenFrog.png") | (SquareIcon == ("Water.png"))) & ((click1peice == ("RedFrog.png")) & (clickcount == 2))) {
-            
+        if ((SquareIcon == ("GreenFrog.png") | (SquareIcon == ("Water.png")))& ((click1peice == ("RedFrog.png")) & (clickcount == 2))) {
+
             final ImageIcon Image = new ImageIcon("RedFrog.png");
             click1square.setIcon(Image);
-            
-            //SquareIcon= "RedFrog.png"; //
-            
+
             clickcount = 0;
 
         }
+
         if (SquareIcon == ("Water.png")) {
             clickcount = 0;
-            
+
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -138,32 +142,65 @@ public class Square implements ActionListener {
         System.out.print("\n" + clickcount);
         System.out.print("\n" + SquareIcon);
 
-
-        
-            
         if ((clickcount == 2) & (SquareIcon == ("LilyPad.png"))& ((click1peice == ("GreenFrog.png")) | (click1peice == ("RedFrog.png")))) {
 
             clickcount = 0;
-             
 
-            moveTo(click1peice, 0, 0, xPosition, yPosition, Board.panel, square, click1square);
+            // ENSUREING LEGAL MOVES!!!!!
 
-        }
+            middleX = ((xPosition + click1xPosition) / 2);
+            middleY = ((yPosition + click1yPosition) / 2);
 
-        //{PROBLEM: SETTING PREVIOUS SQUARE ICON TO LILY PAD} :(((((((((((
+            System.out.print("\n" + middleX);
+            System.out.print("\n" + middleY);
 
-        //incase Frog is moved, set that square as water doesnt work because when you click a frog then water the frog because a lilypad. Water.png
+            if ((middleX % 140 == 0) & (middleY % 140 == 0)) {
 
+                if ((Board.arrayofsqaures[middleX][middleY].GetSquareIcon() == "GreenFrog.png") | (Board.arrayofsqaures[middleX][middleY].GetSquareIcon() == "RedFrog.png")) {
 
-        if ((clickcount == 1) & ((click1peice == ("GreenFrog.png")) | (click1peice == ("RedFrog.png")))){
-            SquareIcon = "LilyPad.png";
+                    //remove frog that was jumped over!
+                    Board.arrayofsqaures[middleX][middleY].SquareIcon="LilyPad.png";
+                    
+                    final ImageIcon LilyPad = new ImageIcon("LilyPad.png");
+                    Board.arrayofsqaures[middleX][middleY].square.setIcon(LilyPad);
+                    
+                    //call move to
+                    moveTo(click1peice, 0, 0, xPosition, yPosition, Board.panel, square, click1square);
+                
+                }
+                //deselect
+                else{
+                    if (click1peice == ("GreenFrog.png")){
+                        final ImageIcon Image = new ImageIcon("GreenFrog.png");
+                        click1square.setIcon(Image);
+                    }
+                    if (click1peice == ("RedFrog.png")){
+                        final ImageIcon Image = new ImageIcon("RedFrog.png");
+                        click1square.setIcon(Image);
+                    }
+                }
+            }
+            else{
+                    if (click1peice == ("GreenFrog.png")){
+                        final ImageIcon Image = new ImageIcon("GreenFrog.png");
+                        click1square.setIcon(Image);
+                    }
+                    if (click1peice == ("RedFrog.png")){
+                        final ImageIcon Image = new ImageIcon("RedFrog.png");
+                        click1square.setIcon(Image);
+                    }
+                }
+                
+            }
             
-        }
+
+            
+
+        
     }
 
     // invoked on second click
-    void moveTo(String click1peice, final int Width, final int Length, final int xPosition, final int yPosition,
-            final JPanel panel, final JButton square, final JButton click1square) {
+    void moveTo(String click1peice, final int Width, final int Length, final int xPosition, final int yPosition,final JPanel panel, final JButton square, final JButton click1square) {
 
         // System.out.print(xPosition);
         // System.out.print(yPosition);
@@ -173,7 +210,8 @@ public class Square implements ActionListener {
 
         final ImageIcon LilyPad = new ImageIcon("LilyPad.png");
         click1square.setIcon(LilyPad);
-        
+
+        Board.arrayofsqaures[click1xPosition][click1yPosition].SquareIcon = "LilyPad.png"; 
         
 
         // set second clicked square(lilypad) to frog icon
@@ -185,6 +223,41 @@ public class Square implements ActionListener {
 
         click1peice = "LilyPad.png";
 
+
+
+        //checking if the user has won!
+        int GreenFrogcount=0;
+        int RedFrogcount=0;
+
+        for (int x = 560; x >= 0; x= x-140) {
+
+            for (int y = 0; y < 700; y= y+140) {
+
+                if (Board.arrayofsqaures[x][y].SquareIcon == "GreenFrog.png"){
+                    GreenFrogcount =GreenFrogcount+1;
+                }
+                if (Board.arrayofsqaures[x][y].SquareIcon == "RedFrog.png"){
+                    RedFrogcount =RedFrogcount+1;
+                }
+            }
+        }
+
+        if ((GreenFrogcount ==0)&(RedFrogcount ==1)){
+            
+            final JFrame frame2 = new JFrame("WIN");
+            JPanel panel2 = new JPanel();
+            JTextField WIN = new JTextField("YOU WIN!");
+            WIN.setEditable(false);
+            frame2.add(panel2);
+            frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            //frame2.pack();
+            frame2.setSize(350,350);
+            frame2.add(WIN);
+            //frame2.pack();
+            frame2.setResizable(false);
+            frame2.setVisible(true);
+            
+        }
     }
 
     // accessor methods for square position on board
@@ -203,5 +276,7 @@ public class Square implements ActionListener {
     public void setIsClicked(final Boolean bool) {
         isclicked = bool;
     }
+
+
 
 }
